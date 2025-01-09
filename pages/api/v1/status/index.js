@@ -1,6 +1,6 @@
 import database from "infra/database.js";
 
-async function status(request, response) {
+async function status(_, response) {
   const updatedAt = new Date().toISOString();
 
   const databaseName = process.env.POSTGRES_DB;
