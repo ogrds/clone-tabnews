@@ -4,6 +4,7 @@ import database from "infra/database";
 import migrator from "models/migrator";
 import user from "models/user.js";
 import session from "models/session.js";
+import activation from "models/activation";
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -96,6 +97,11 @@ function extractUUID(text) {
   return match ? match[0] : null;
 }
 
+async function createUserActivationToken(userObject) {
+  const activationToken = await activation.create(userObject.id);
+  return activationToken;
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -105,6 +111,7 @@ const orchestrator = {
   deleteAllEmails,
   getLastEmail,
   extractUUID,
+  createUserActivationToken,
 };
 
 export default orchestrator;
