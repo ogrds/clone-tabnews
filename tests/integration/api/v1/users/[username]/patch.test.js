@@ -98,6 +98,46 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
+    test("With user targeting another username", async () => {
+      await orchestrator.createUser({
+        username: "otheruser",
+      });
+
+      const createdUser = await orchestrator.createUser({
+        username: "currentuser",
+      });
+
+      await orchestrator.activateUser(createdUser);
+
+      const sessionObject = await orchestrator.createSession(createdUser.id);
+
+      const response = await fetch(
+        "http://localhost:3000/api/v1/users/otheruser",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObject.token}`,
+          },
+          body: JSON.stringify({
+            username: "newusername",
+          }),
+        },
+      );
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        action:
+          "Verifique se você possui a feature necessária para atualizar outro usuário.",
+        message: "Você não possui permissão para alterar outro usuário.",
+        status_code: 403,
+      });
+    });
+
     test("With duplicate 'email'", async () => {
       await orchestrator.createUser({
         email: "email1@example.com",
@@ -292,45 +332,6 @@ describe("PATCH /api/v1/users/[username]", () => {
         userInDatabase.password,
       );
       expect(incorrectPasswordMatch).toBe(false);
-    });
-
-    test("With another username", async () => {
-      await orchestrator.createUser({
-        username: "userwithanotherusername",
-      });
-
-      const createdUser = await orchestrator.createUser({
-        username: "currentuser",
-      });
-
-      await orchestrator.activateUser(createdUser);
-
-      const sessionObject = await orchestrator.createSession(createdUser.id);
-
-      const response = await fetch(
-        "http://localhost:3000/api/v1/users/userwithanotherusername",
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: `session_id=${sessionObject.token}`,
-          },
-          body: JSON.stringify({
-            username: "validusername",
-          }),
-        },
-      );
-
-      expect(response.status).toBe(403);
-
-      const responseBody = await response.json();
-
-      expect(responseBody).toEqual({
-        name: "ForbiddenError",
-        message: "Você não tem permissão para alterar este usuário.",
-        action: "Verifique suas credenciais e tente novamente.",
-        status_code: 403,
-      });
     });
   });
 });
