@@ -64,7 +64,6 @@ describe("GET /api/v1/user", () => {
           "read:user",
           "update:user",
         ],
-        password: createdUser.password,
         created_at: createdUser.created_at.toISOString(),
         updated_at: activatedUser.updated_at.toISOString(),
       });
@@ -134,7 +133,6 @@ describe("GET /api/v1/user", () => {
           "read:user",
           "update:user",
         ],
-        password: createdUser.password,
         created_at: createdUser.created_at.toISOString(),
         updated_at: activatedUser.updated_at.toISOString(),
       });

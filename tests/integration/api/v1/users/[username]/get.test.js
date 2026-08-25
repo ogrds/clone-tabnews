@@ -54,14 +54,12 @@ describe("GET /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: "SameCaseUser",
-        email: createdUser.email,
         features: [
           "create:session",
           "read:session",
           "read:user",
           "update:user",
         ],
-        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -95,14 +93,12 @@ describe("GET /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: "DifferentCaseUser",
-        email: createdUser.email,
         features: [
           "create:session",
           "read:session",
           "read:user",
           "update:user",
         ],
-        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
