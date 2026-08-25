@@ -133,4 +133,38 @@ describe("POST /api/v1/users", () => {
       });
     });
   });
+
+  describe("Default user", () => {
+    test("retrieving the endpoint", async () => {
+      const createdUser = await orchestrator.createUser();
+
+      await orchestrator.activateUser(createdUser);
+
+      const sessionObject = await orchestrator.createSession(createdUser.id);
+
+      const response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          Cookie: `session_id=${sessionObject.token}`,
+        },
+        body: JSON.stringify({
+          username: "anotheruser",
+          email: "anotheruser@example.com",
+          password: "password123",
+        }),
+      });
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não possui permissão para realizar esta ação.",
+        action:
+          "Verifique se seu usuário possui a feature necessária para realizar esta ação.",
+        status_code: 403,
+      });
+    });
+  });
 });
