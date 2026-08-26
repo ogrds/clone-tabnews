@@ -28,7 +28,7 @@ describe("GET /api/v1/status", () => {
     test("Retrieving current system status", async () => {
       const user = await orchestrator.createUser();
       const activatedUser = await orchestrator.activateUser(user);
-      const sessionObject = await orchestrator.createSession(activatedUser.id);
+      const sessionObject = await orchestrator.createSession(activatedUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/status`, {
         headers: {
@@ -56,7 +56,7 @@ describe("GET /api/v1/status", () => {
         activatedUser,
         ["read:status:all"],
       );
-      const sessionObject = await orchestrator.createSession(privilegedUser.id);
+      const sessionObject = await orchestrator.createSession(privilegedUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/status`, {
         headers: {

@@ -39,7 +39,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const createdUser = await orchestrator.createUser();
       await orchestrator.activateUser(createdUser);
 
-      const sessionObject = await orchestrator.createSession(createdUser.id);
+      const sessionObject = await orchestrator.createSession(createdUser);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/nonexistentuser`,
@@ -74,7 +74,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       await orchestrator.activateUser(createdUser);
 
-      const sessionObject = await orchestrator.createSession(createdUser.id);
+      const sessionObject = await orchestrator.createSession(createdUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/users/user2`, {
         method: "PATCH",
@@ -110,7 +110,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       await orchestrator.activateUser(createdUser);
 
-      const sessionObject = await orchestrator.createSession(createdUser.id);
+      const sessionObject = await orchestrator.createSession(createdUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/users/userA`, {
         method: "PATCH",
@@ -147,7 +147,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       await orchestrator.activateUser(createdUser2);
 
-      const sessionObject = await orchestrator.createSession(createdUser2.id);
+      const sessionObject = await orchestrator.createSession(createdUser2);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${createdUser2.username}`,
@@ -180,7 +180,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       await orchestrator.activateUser(createdUser1);
 
-      const sessionObject = await orchestrator.createSession(createdUser1.id);
+      const sessionObject = await orchestrator.createSession(createdUser1);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${createdUser1.username}`,
@@ -225,7 +225,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       await orchestrator.activateUser(createdUser);
 
-      const sessionObject = await orchestrator.createSession(createdUser.id);
+      const sessionObject = await orchestrator.createSession(createdUser);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${createdUser.username}`,
@@ -275,7 +275,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
 
       await orchestrator.activateUser(createdUser1);
-      const sessionObject = await orchestrator.createSession(createdUser1.id);
+      const sessionObject = await orchestrator.createSession(createdUser1);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${createdUser1.username}`,
@@ -340,7 +340,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         "update:user:others",
       ]);
 
-      const sessionObject = await orchestrator.createSession(privilegedUser.id);
+      const sessionObject = await orchestrator.createSession(privilegedUser);
 
       const defaultUser = await orchestrator.createUser();
 
