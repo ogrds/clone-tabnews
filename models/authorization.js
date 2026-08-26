@@ -1,7 +1,36 @@
+import { InternalServerError } from "infra/errors";
+
+const availableFeatures = [
+  // user
+  "create:user",
+  "read:user",
+  "read:user:self",
+  "update:user",
+  "update:user:others",
+
+  // session
+  "create:session",
+  "read:session",
+
+  // activation token
+  "read:activation_token",
+
+  // migration
+  "create:migration",
+  "read:migration",
+
+  // status
+  "read:status",
+  "read:status:all",
+];
+
 function can(user, feature, resource) {
+  validateUser(user);
+  validateFeature(feature);
+
   let authorized = false;
 
-  if (user?.features?.includes(feature)) {
+  if (user.features.includes(feature)) {
     authorized = true;
   }
 
@@ -17,6 +46,10 @@ function can(user, feature, resource) {
 }
 
 function filterOutput(user, feature, resource) {
+  validateUser(user);
+  validateFeature(feature);
+  validateResource(resource);
+
   if (feature === "read:user") {
     return {
       id: resource.id,
@@ -89,6 +122,32 @@ function filterOutput(user, feature, resource) {
     }
 
     return output;
+  }
+}
+
+function validateUser(user) {
+  if (!user || !user.features) {
+    throw new InternalServerError({
+      cause: "É necessario fornecer `user` no model `authorization`",
+    });
+  }
+}
+
+function validateFeature(feature) {
+  if (!feature || !availableFeatures.includes(feature)) {
+    throw new InternalServerError({
+      cause:
+        "É necessario fornecer uma `feature` conhecida no model `authorization`",
+    });
+  }
+}
+
+function validateResource(resource) {
+  if (!resource) {
+    throw new InternalServerError({
+      cause:
+        "É necessario fornecer `resource` em `authorization.filterOutput()`",
+    });
   }
 }
 
