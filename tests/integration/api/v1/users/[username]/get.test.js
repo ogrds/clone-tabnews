@@ -1,5 +1,6 @@
 import { version as uuidVersion } from "uuid";
 import orchestrator from "tests/orchestrator";
+import webserver from "infra/webserver";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -11,7 +12,7 @@ describe("GET /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("retrieving the endpoint", async () => {
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/AnonymousUser",
+        `${webserver.origin}/api/v1/users/AnonymousUser`,
       );
 
       expect(response.status).toBe(403);
@@ -39,7 +40,7 @@ describe("GET /api/v1/users/[username]", () => {
       const sessionObject = await orchestrator.createSession(createdUser.id);
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/SameCaseUser",
+        `${webserver.origin}/api/v1/users/SameCaseUser`,
         {
           headers: {
             Cookie: `session_id=${sessionObject.token}`,
@@ -78,7 +79,7 @@ describe("GET /api/v1/users/[username]", () => {
       const sessionObject = await orchestrator.createSession(createdUser.id);
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/differentcaseuser",
+        `${webserver.origin}/api/v1/users/differentcaseuser`,
         {
           headers: {
             Cookie: `session_id=${sessionObject.token}`,
@@ -114,7 +115,7 @@ describe("GET /api/v1/users/[username]", () => {
       const sessionObject = await orchestrator.createSession(createdUser.id);
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/nonexistentuser",
+        `${webserver.origin}/api/v1/users/nonexistentuser`,
         {
           headers: {
             Cookie: `session_id=${sessionObject.token}`,
