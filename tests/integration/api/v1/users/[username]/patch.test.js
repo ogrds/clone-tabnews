@@ -221,14 +221,14 @@ describe("PATCH /api/v1/users/[username]", () => {
     });
 
     test("With unique `email`", async () => {
-      const createdUser1 = await orchestrator.createUser();
+      const createdUser = await orchestrator.createUser();
 
-      await orchestrator.activateUser(createdUser1);
+      await orchestrator.activateUser(createdUser);
 
-      const sessionObject = await orchestrator.createSession(createdUser1.id);
+      const sessionObject = await orchestrator.createSession(createdUser.id);
 
       const response = await fetch(
-        `${webserver.origin}/api/v1/users/${createdUser1.username}`,
+        `${webserver.origin}/api/v1/users/${createdUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -247,7 +247,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       expect(responseBody).toEqual({
         id: responseBody.id,
-        username: createdUser1.username,
+        username: createdUser.username,
         features: [
           "create:session",
           "read:session",
@@ -263,6 +263,10 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+
+      const userInDatabase = await user.findOneByUsername(createdUser.username);
+
+      expect(userInDatabase.email).toBe("uniqueEmail2@example.com");
     });
 
     test("With new `password`", async () => {
